@@ -50,7 +50,24 @@ class Game:
                     
         print("Mus phase over")
         
-        
+    def bidding_round(self, bid_type):
+        current_bid = 0
+        winning_team = None
+        for player in self.players:
+            bid = player.make_bid(bid_type, current_bid)
+            if bid == "paso":
+                continue
+            elif bid == "imido":
+                current_bid = 2
+                winning_team = player.team
+            elif isinstance(bid, int) and bid > current_bid:
+                current_bid = bid
+                winning_team = player.team
+            elif bid == "hordago":
+                current_bid = 40
+                winning_team = player.team
+                break
+        return winning_team, current_bid
     def show_all_cards(self):
         for player in self.players:
             player.show_hand()
@@ -64,7 +81,8 @@ class Game:
         # Show all cards
         self.show_all_cards()
         self.play_mus()
-
+        winning_team, bid = self.bidding_round("Grand")
+        print(f"{winning_team} wins the bid for Grand with {bid} points.")
         
         # ... Continuer avec les autres phases du jeu ...
 
